@@ -6,7 +6,7 @@ class Waz():
         self.pozycja=[(160,160)]
         self.punkty=0
         self.kierunek=(0,1)
-    #ustalanie kierunku
+    #ustalenie kierunku węża
     def setDirection(self,direction):
         self.kierunek=direction
     #zwrócenie pozycji głowy
@@ -17,10 +17,11 @@ class Waz():
         self.pozycja.append((x,y))
     #wykonanie ruchu przez węża
     def snakeMove(self):
-        #ostatnie pozycja głowy
+        #generowanie nowych pozycji
+        #ostatnia pozycja glowy
         ostatniaPozycja=self.pozycja[-1]
-        x=ostatniaPozycja[0]+20*kierunek[0]
-        y=ostatniaPozycja[1]+20*kierunek[1]
+        x=ostatniaPozycja[0]+20*self.kierunek[0]
+        y=ostatniaPozycja[1]+20*self.kierunek[1]
         #sprawdzanie krawedzi
         noweWspolrzedne=self.checkBorder(x,y)
         #sprawdzenie czy wąż nie zjadł sam siebie
@@ -50,15 +51,15 @@ class Waz():
     #sprawdzanie krawedzi okna
     def checkBorder(self,zmienna1,zmienna2):
         #przejscie prawa
-        if zmienna1>300:
+        if zmienna1>900:
             zmienna1=0
         #przejscie dol
-        if zmienna2>300:
+        if zmienna2>900:
             zmienna2=0
         #przejscie lewa
         if zmienna1<0:
-            zmienna1=300
+            zmienna1=900
         #przejscie gora
         if zmienna2<0:
-            zmienna2=300
+            zmienna2=900
         return (zmienna1,zmienna2)

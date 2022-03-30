@@ -3,113 +3,67 @@ import random
 import waz
 import jablko
 
+iloscJablek=5
+
+
 def main():
-    pygame.init()
-    OknoGry=pygame.display.set_mode((440,440),0,32)
-    pygame.display.set_caption("3tieg")
-    run=True
-    iloscJablek=3
-    #wywołanie klasy waz
-    obiektWaz1=waz.Waz()
-    obiektWaz2=waz.Waz()
-    #tworzenie kilku jablek
+    obiektWaz=waz.Waz()
     obiektJablko=[]
-    for nrJablko in range(0,iloscJablek):
+    for nrJablka in range(0,iloscJablek):
         obiektJablko.append(jablko.Jablko())
     
-    #losowanie pozycji jabłka
-    appleX=random.randint(0,21)*20+10
-    appleY=random.randint(0,21)*20+10
+
+    
+    pygame.init()
+    Oknogry=pygame.display.set_mode((900,900),0,32)
+    run=True
+
     
     while(run):
-        OknoGry.fill((0,0,0))
+        glowa=obiektWaz.getHeadPosition()
+        glowaWazX=glowa[0]
+        glowaWazY=glowa[1]
+        Oknogry.fill((0,0,0))
+        pygame.time.delay(100)
         
-        for obiektApple in obiektJablko[::]:
-            obiektApple.rysujJablko(OknoGry)
-        #obiektJablko.rysujJablko(OknoGry)
-        pygame.time.delay(200)
-        #obsługa ruchu weża obiektu obiket waz
-        for zdarzenie in pygame.event.get():
-            if zdarzenie.type==pygame.QUIT:
-                run=False
-            elif zdarzenie.type==pygame.KEYDOWN:
-                if zdarzenie.key==pygame.K_LEFT:
-                    obiektWaz1.setKierunek((-1,0))
-                elif zdarzenie.key==pygame.K_RIGHT:
-                    obiektWaz1.setKierunek((1,0))
-                elif zdarzenie.key==pygame.K_UP:
-                    obiektWaz1.setKierunek((0,-1))
-                elif zdarzenie.key==pygame.K_DOWN:
-                    obiektWaz1.setKierunek((0,1))
-                elif zdarzenie.key==pygame.K_a:
-                    obiektWaz2.setKierunek((-1,0))
-                elif zdarzenie.key==pygame.K_d:
-                    obiektWaz2.setKierunek((1,0))
-                elif zdarzenie.key==pygame.K_w:
-                    obiektWaz2.setKierunek((0,-1))
-                elif zdarzenie.key==pygame.K_s:
-                    obiektWaz2.setKierunek((0,1))
-        #wykonanie ruchu za każdym razem wykonania pętli        
-        obiektWaz1.ruch()
-        obiektWaz1.rysowanie(OknoGry)
-        obiektWaz2.ruch()
-        obiektWaz2.rysowanie(OknoGry)
         
-        #tworzenie jablka za pomoca kola
-        #pygame.draw.circle(OknoGry,(128,0,0),(appleX,appleY),10)
         
-        #sprawdzenie czy waz zjada jablko
-        poz1=obiektWaz1.getPosition()
-        poz2=obiektWaz2.getPosition()
-        for obiektApple in obiektJablko[::]:
-            pozJablko=obiektApple.getPozycja()
-            if (poz1[1]+10==pozJablko[1] and poz1[0]+10==pozJablko[0]):
-                obiektWaz1.zjadanie()
-            if (poz2[1]+10==pozJablko[1] and poz2[0]+10==pozJablko[0]):
-                obiektWaz2.zjadanie()
-            #wylosowanie nowej pozycji jablka
-                obiektApple.losujPozycje()
-            #appleX=random.randint(0,21)*20+10
-            #appleY=random.randint(0,21)*20+10
-            #pygame.draw.circle(OknoGry,(128,128,128),(appleX,appleY),10)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            #sterowanie weża
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    obiektWaz.setDirection((-1,0))
+                elif event.key == pygame.K_RIGHT:
+                    obiektWaz.setDirection((1,0))
+                elif event.key == pygame.K_UP:
+                    obiektWaz.setDirection((0,-1))
+                elif event.key == pygame.K_DOWN:
+                    obiektWaz.setDirection((0,1))
+                #sprawdzanie czy waz nie zjada siebie
+                
+        obiektWaz.snakeMove()
+                
+        #rysowanie węża
+        obiektWaz.drawSnake(Oknogry)
             
-        #wypisanie punktow na ekran
+            #zjedzenie jablka
+        for nrJablka in obiektJablko [::]:
+
+            pozycjaJablka=nrJablka.getPosition()
+            if glowaWazX==pozycjaJablka[0]-10 and glowaWazY==pozycjaJablka[1]-10:
+                obiektWaz.snakeEat()
+                #dlugosc=dlugosc+1
+                #losowanie pozycji jablka
+                nrJablka.randPosition()
+                #rysowanie jabłka
+            nrJablka.drawApple(Oknogry)
+        
         czcionka=pygame.font.SysFont('comicsans',20)
-        tekst=czcionka.render("Punkty gracz 1: {0}".format(obiektWaz1.punkty),1,(0,255,0))
-        tekst2=czcionka.render("Punkty gracz 2: {0}".format(obiektWaz2.punkty),1,(0,255,0))
-        OknoGry.blit(tekst, (10,10))
-        OknoGry.blit(tekst2, (10,30))
-        
-        #pobieranie pozycji głowy
-        glowa1=obiektWaz1.getPosition()
-        glowa2=obiektWaz2.getPosition()
-        #sprawdzanie przejścia przez krawędź okna
-        #prawa częśc okna
-        if glowa1[0]>420:
-            obiektWaz1.setPosition(0,glowa1[1])
-        #lewa część okna
-        if glowa1[0]<0:
-            obiektWaz1.setPosition(420,glowa1[1])
-        #dół ekranu
-        if glowa1[1]>420:
-            obiektWaz1.setPosition(glowa1[0],0)
-        #góra ekranu
-        if glowa1[1]<0:
-            obiektWaz1.setPosition(glowa1[0],420)
-        
-        if glowa2[0]>420:
-            obiektWaz2.setPosition(0,glowa2[1])
-        #lewa część okna
-        if glowa2[0]<0:
-            obiektWaz2.setPosition(420,glowa2[1])
-        #dół ekranu
-        if glowa2[1]>420:
-            obiektWaz2.setPosition(glowa2[0],0)
-        #góra ekranu
-        if glowa2[1]<0:
-            obiektWaz2.setPosition(glowa2[0],420)
-
-
+        tekst=czcionka.render("Punkty {0}".format(obiektWaz.punkty),1,(255,255,0))
+        Oknogry.blit(tekst,(10,10))
+       
         pygame.display.update()
 
-#main()
+main()
