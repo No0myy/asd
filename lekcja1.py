@@ -7,7 +7,9 @@ iloscJablek=5
 
 
 def main():
-    obiektWaz=waz.Waz()
+    obiektWaz1=waz.Waz()
+    obiektWaz2=waz.Waz()
+
     obiektJablko=[]
     for nrJablka in range(0,iloscJablek):
         obiektJablko.append(jablko.Jablko())
@@ -15,14 +17,18 @@ def main():
 
     
     pygame.init()
-    Oknogry=pygame.display.set_mode((900,900),0,32)
+    Oknogry=pygame.display.set_mode((300,300),0,32)
     run=True
 
     
     while(run):
-        glowa=obiektWaz.getHeadPosition()
-        glowaWazX=glowa[0]
-        glowaWazY=glowa[1]
+        glowa=obiektWaz1.getHeadPosition()
+        obiektWaz1X=glowa[0]
+        obiektWaz1Y=glowa[1]
+        glowa2=obiektWaz2.getHeadPosition()
+        glowaWaz2X=glowa2[0]
+        glowaWaz2Y=glowa2[1]
+
         Oknogry.fill((0,0,0))
         pygame.time.delay(100)
         
@@ -34,26 +40,40 @@ def main():
             #sterowanie weża
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    obiektWaz.setDirection((-1,0))
+                    obiektWaz1.setDirection((-1,0))
                 elif event.key == pygame.K_RIGHT:
-                    obiektWaz.setDirection((1,0))
+                    obiektWaz1.setDirection((1,0))
                 elif event.key == pygame.K_UP:
-                    obiektWaz.setDirection((0,-1))
+                    obiektWaz1.setDirection((0,-1))
                 elif event.key == pygame.K_DOWN:
-                    obiektWaz.setDirection((0,1))
+                    obiektWaz1.setDirection((0,1))
+                elif event.key == pygame.K_a:
+                    obiektWaz2.setDirection((-1,0))
+                elif event.key == pygame.K_d:
+                    obiektWaz2.setDirection((1,0))
+                elif event.key == pygame.K_w:
+                    obiektWaz2.setDirection((0,-1))
+                elif event.key == pygame.K_s:
+                    obiektWaz2.setDirection((0,1))
+                    
                 #sprawdzanie czy waz nie zjada siebie
                 
-        obiektWaz.snakeMove()
+        obiektWaz1.snakeMove()
+        obiektWaz2.snakeMove()
                 
         #rysowanie węża
-        obiektWaz.drawSnake(Oknogry)
+        obiektWaz1.drawSnake(Oknogry)
+        obiektWaz2.drawSnake1(Oknogry)
             
             #zjedzenie jablka
         for nrJablka in obiektJablko [::]:
 
             pozycjaJablka=nrJablka.getPosition()
-            if glowaWazX==pozycjaJablka[0]-10 and glowaWazY==pozycjaJablka[1]-10:
-                obiektWaz.snakeEat()
+            if obiektWaz1X==pozycjaJablka[0]-10 and obiektWaz1Y==pozycjaJablka[1]-10:
+                obiektWaz1.snakeEat()
+
+            if glowaWaz2X==pozycjaJablka[0]-10 and glowaWaz2Y==pozycjaJablka[1]-10:
+                obiektWaz2.snakeEat()
                 #dlugosc=dlugosc+1
                 #losowanie pozycji jablka
                 nrJablka.randPosition()
@@ -61,8 +81,12 @@ def main():
             nrJablka.drawApple(Oknogry)
         
         czcionka=pygame.font.SysFont('comicsans',20)
-        tekst=czcionka.render("Punkty {0}".format(obiektWaz.punkty),1,(255,255,0))
+        tekst=czcionka.render("Punkty {0}".format(obiektWaz1.punkty),1,(255,0,0))
         Oknogry.blit(tekst,(10,10))
+
+        czcionka=pygame.font.SysFont('comicsans',20)
+        tekst=czcionka.render("Punkty {0}".format(obiektWaz2.punkty),1,(0,255,0))
+        Oknogry.blit(tekst,(200,10))
        
         pygame.display.update()
 

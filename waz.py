@@ -48,18 +48,31 @@ class Waz():
         for position in self.pozycja[::-1]:
             kwadrat = pygame.Rect((position[0],position[1]),(20,20))
             pygame.draw.rect(Oknogry,(255,0,0),kwadrat)
+    def drawSnake1(self, Oknogry):
+        for position in self.pozycja[::-1]:
+            kwadrat = pygame.Rect((position[0],position[1]),(20,20))
+            pygame.draw.rect(Oknogry,(0,255,0),kwadrat)
     #sprawdzanie krawedzi okna
     def checkBorder(self,zmienna1,zmienna2):
         #przejscie prawa
-        if zmienna1>900:
+        if zmienna1>300:
             zmienna1=0
         #przejscie dol
-        if zmienna2>900:
+        if zmienna2>300:
             zmienna2=0
         #przejscie lewa
         if zmienna1<0:
-            zmienna1=900
+            zmienna1=300
         #przejscie gora
         if zmienna2<0:
-            zmienna2=900
+            zmienna2=300
         return (zmienna1,zmienna2)
+
+        #sprawdzanie czy ktoś mnie zjadł
+    def bitMe(self,pozycje):
+        for czesciCiała in self.pozycja[::]:
+            if pozycje[0]==czesciCiała[0] and pozycje[1] ==czesciCiała[1]:
+                self.pozycja=[(pozycje[0],pozycje[1]
+                )]
+                self.dlugosc=1
+                self.punkty=0
