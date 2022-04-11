@@ -1,5 +1,8 @@
+
 import random
 import pygame
+import lekcja1
+
 class Jablko():
     #konstruktor klasy
     def __init__(self):
@@ -12,6 +15,7 @@ class Jablko():
     def drawApple(self,Oknogry):
         pygame.draw.circle(Oknogry,(128,0,0),(self.applePosition[0], self.applePosition[1]),10)
     def randPosition(self):
+        rozmiar =lekcja1.rozdzielczosc//20
         xApple=random.randint(0,14)*20+10
         yApple=random.randint(0,14)*20+10
         self.setPosition(xApple,yApple)
